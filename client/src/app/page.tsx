@@ -15,7 +15,7 @@ export default function Home() {
                 console.log('error caught')
                 setError(e.message)
             })
-    })
+    }, [])
     return (
         <div>
             hello world should be here: {label ?? error}

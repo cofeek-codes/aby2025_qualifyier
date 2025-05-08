@@ -11,8 +11,8 @@ app.get('/', (req, res) => {
     res.json("hello world")
 })
 
-app.get('/services/all', (req, res) => {
-  const services = prisma.service.findMany({
+app.get('/services/all', async (req, res) => {
+  const services = await prisma.service.findMany({
     include: {category: true, user: true}
   })
   
