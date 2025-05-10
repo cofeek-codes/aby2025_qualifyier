@@ -27,7 +27,16 @@ app.get('/services/all', async (req, res) => {
 app.post('/auth/register', async (req, res) => {
   console.log('/auth/register body')
   console.log(req.body)
-  res.json(req.body)
+  const _res = {}
+  const email = req.body.email
+  // check existing
+  const existingUser = await prisma.user.findUnique({
+    where: { email }
+  })
+  
+  if (existingUser) {
+    _res.error = "User with this email already exists"
+  }
 })
 
 
