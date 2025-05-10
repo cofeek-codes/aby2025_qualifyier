@@ -14,9 +14,11 @@ export default function RegistrationForm() {
         password: '',
         confirmPassword: ''
     });
-    
+
     const [profileImage, setProfileImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -27,9 +29,30 @@ export default function RegistrationForm() {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+      event.preventDefault();
+      setError(null)
         console.log('Отправленные данные:', formData);
         console.log('Изображение профиля:', profileImage);
+        if (formData.password == formData.confirmPassword) {
+          fetch('http://localhost:3000/auth/register', {
+            method: 'post',
+            body: JSON.stringify(formData),
+            headers: {
+            "Content-Type": "application/json"
+          }
+            }).then(res => res.json()).then(res => {
+              console.log(res)
+              if (res['error'])
+                setError(res['error'])
+              else {
+                console.log(res)
+              }
+              
+            }).catch(e => setError(e.message))
+        } else {
+            setError("passwords don't match")
+        }
+
     };
 
     return (
@@ -47,16 +70,16 @@ export default function RegistrationForm() {
                                     <div className="d-flex justify-content-center">
                                         <div className="position-relative">
                                             <img
-                                              src={previewUrl || 'https://placehold.co/150'}
-                                              alt="Профиль"
-                                              width={150}
-                                              height={150}
-                                              className="rounded-circle img-fluid"
-                                              style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                                                src={previewUrl || 'https://placehold.co/150'}
+                                                alt="Профиль"
+                                                width={150}
+                                                height={150}
+                                                className="rounded-circle img-fluid"
+                                                style={{ width: '150px', height: '150px', objectFit: 'cover' }}
                                             />
                                             <div className="mt-2">
-                                                <label 
-                                                    htmlFor="profileImage" 
+                                                <label
+                                                    htmlFor="profileImage"
                                                     className="btn btn-outline-secondary"
                                                 >
                                                     Загрузить фото профиля
@@ -81,7 +104,7 @@ export default function RegistrationForm() {
                                         id="firstName"
                                         className="form-control"
                                         value={formData.firstName}
-                                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                         required
                                     />
                                 </div>
@@ -94,7 +117,7 @@ export default function RegistrationForm() {
                                         id="lastName"
                                         className="form-control"
                                         value={formData.lastName}
-                                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                         required
                                     />
                                 </div>
@@ -107,7 +130,7 @@ export default function RegistrationForm() {
                                         id="email"
                                         className="form-control"
                                         value={formData.email}
-                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         required
                                     />
                                 </div>
@@ -120,7 +143,7 @@ export default function RegistrationForm() {
                                         id="phone"
                                         className="form-control"
                                         value={formData.phone}
-                                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         required
                                     />
                                 </div>
@@ -132,7 +155,7 @@ export default function RegistrationForm() {
                                         id="address"
                                         className="form-control"
                                         value={formData.address}
-                                        onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                         required
                                     />
                                 </div>
@@ -145,8 +168,9 @@ export default function RegistrationForm() {
                                         id="password"
                                         className="form-control"
                                         value={formData.password}
-                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                        required
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                      required
+                                      minLength={6}
                                     />
                                 </div>
 
@@ -158,11 +182,11 @@ export default function RegistrationForm() {
                                         id="confirmPassword"
                                         className="form-control"
                                         value={formData.confirmPassword}
-                                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                         required
                                     />
                                 </div>
-
+                                {error && (<div className='alert alert-danger'>{error}</div>)}
                                 <button type="submit" className="btn btn-primary w-100">
                                     Зарегистрироваться
                                 </button>
