@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
 
 export default function Services() {
   const [services, setServices] = useState([])
@@ -20,12 +21,15 @@ export default function Services() {
                 setError(e.message)
             })
     }, [])
-    return (
+  return (
+    <>
+      <Header />
         <div>
           {error && error}
           {(!error && services.length > 0) && services.map((s) => (
             <div key={s.id}>service title: {s.title}</div>
           ))}
         </div>
+    </>
     );
 }

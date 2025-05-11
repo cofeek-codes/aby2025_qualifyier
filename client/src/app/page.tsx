@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
 
 export default function Home() {
     const [label, setLabel] = useState(null)
@@ -17,8 +18,11 @@ export default function Home() {
             })
     }, [])
     return (
-        <div>
-            hello world should be here: {label ?? error}
-        </div>
+        <>
+            <Header />
+            <div>
+                hello world should be here: {label ?? error}
+            </div>
+        </>
     );
 }

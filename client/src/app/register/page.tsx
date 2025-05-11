@@ -186,7 +186,6 @@ export default function RegistrationForm() {
                                         value={formData.password}
                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                       required
-                                      minLength={6}
                                     />
                                 </div>
 
