@@ -30,10 +30,15 @@ export default function RegistrationForm() {
 
     const handleSubmit = (event) => {
       event.preventDefault();
+      // manually call validation
       setError(null)
+      if (!event.currentTarget.checkValidity()) {
+        event.currentTarget.reportValidity()
+        return
+      }
         console.log('Отправленные данные:', formData);
         console.log('Изображение профиля:', profileImage);
-        if (formData.password == formData.confirmPassword) {
+      if (formData.password == formData.confirmPassword) {
           fetch('http://localhost:3000/auth/register', {
             method: 'post',
             body: JSON.stringify(formData),
