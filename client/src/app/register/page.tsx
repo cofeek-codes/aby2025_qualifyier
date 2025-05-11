@@ -3,8 +3,12 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 import styles from "./page.module.css";
+import { CookieManager } from '@/utils/CookieManager';
+import { useRouter } from 'next/navigation';
 
 export default function RegistrationForm() {
+  const router = useRouter()
+  
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -36,8 +40,7 @@ export default function RegistrationForm() {
         event.currentTarget.reportValidity()
         return
       }
-        console.log('Отправленные данные:', formData);
-        console.log('Изображение профиля:', profileImage);
+      
       if (formData.password == formData.confirmPassword) {
           fetch('http://localhost:3000/auth/register', {
             method: 'post',
@@ -50,7 +53,15 @@ export default function RegistrationForm() {
               if (res['error'])
                 setError(res['error'])
               else {
+                // successful registration
                 console.log(res)
+                CookieManager.setUserIdInCookie(res.user.id)
+                // storing full user information in localStorage
+                // localStorage.setItem('user', JSON.stringify(res.user))
+                // No; we will fetch user in every component that needs it
+
+                // redirect to home
+                router.push('/')
               }
               
             }).catch(e => setError(e.message))
