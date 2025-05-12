@@ -24,6 +24,34 @@ app.get('/services/all', async (req, res) => {
 
 })
 
+// user login
+app.post('/auth/login', async (req, res) => {
+        console.log('/auth/login body')
+    console.log(req.body)
+    const _res = {}
+    let email = req.body.email
+    let password = req.body.password
+    // check existing
+    const existingUser = await prisma.user.findUnique({
+        where: { email }
+    })
+
+    if (!existingUser) {
+        _res.error = "User with this email not found"
+        res.json(_res)
+    } else {
+        let isPasswordValid = bcrypt.compareSync(password, existingUser.password)
+        if (!isPasswordValid) {
+            _res.error = "Invalid password"
+            res.json(_res)
+        } else {
+            _res.user = existingUser
+            console.log(_res.user)
+            res.json(_res)
+        }
+
+    }
+})
 // user registration
 app.post('/auth/register', async (req, res) => {
     console.log('/auth/register body')
